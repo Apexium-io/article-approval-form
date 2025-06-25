@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Approve or Edit Social Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 0;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        .buttons {
+            margin-top: 30px;
+        }
+
+        button {
+            margin-right: 15px;
+            padding: 10px 20px;
+            font-size: 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .approve {
+            background-color: #cfc;
+        }
+
+        .edit {
+            background-color: #eef;
+        }
+
+        .hashtag {
+            background-color: #ffe;
+        }
+
+        .message {
+            margin-top: 30px;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Review and Approve Post</h1>
+
+    <form id="approvalForm">
+        <input type="hidden" name="articleId" id="articleId">
+        <input type="hidden" name="platform" id="platform">
+        <input type="hidden" name="email" id="email">
+        <input type="hidden" name="actionType" id="actionType">
+
+        <label>Article Title:</label>
+        <div id="articleTitle">Lithuanian startup Traxlo raises €1.6 million...</div>
+
+        <label>Article URL:</label>
+        <a href="https://www.eu-startups.com/2025/06/lithuanian-startup-traxlo-raises-e1-6-million-to-build-the-labor-infrastructure-for-the-ai-era/"
+            target="_blank">
+            View Article
+        </a>
+
+        <label>Suggested Post:</label>
+        <textarea name="newPostContent" rows="5">Exciting times for innovation! Lithuanian startup Traxlo...</textarea>
+
+        <label>Suggested Hashtags:</label>
+        <input type="text" name="newHashtagContent" value="#Innovation #Startups #AI #FutureOfWork #Technology">
+
+        <div class="buttons">
+            <button type="submit" class="approve" onclick="setAction('approve')">✅ Approve Post</button>
+            <button type="submit" class="edit" onclick="setAction('changePost')">✏️ Change Post</button>
+            <button type="submit" class="hashtag" onclick="setAction('changeHashtag')">🔖 Change Hashtags</button>
+        </div>
+    </form>
+
+    <div class="message" id="messageBox"></div>
+
+    <script>
+        // Prefill hidden inputs from query string
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("articleId").value = urlParams.get("articleId") || "";
+        document.getElementById("platform").value = urlParams.get("platform") || "";
+        document.getElementById("email").value = urlParams.get("email") || "";
+
+        function setAction(type) {
+            document.getElementById("actionType").value = type;
+        }
+
+        // Submit via fetch
+        document.getElementById("approvalForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const data = new FormData(form);
+            const jsonData = {};
+            for (const [key, value] of data.entries()) {
+                jsonData[key] = value;
+            }
+
+            const response = await fetch("https://pivotpointit.app.n8n.cloud/webhook/form-handler", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(jsonData)
+            });
+
+            document.getElementById("messageBox").textContent = "✅ Your submission was successful!";
+        });
+    </script>
+</body>
+
+</html>
