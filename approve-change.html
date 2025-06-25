@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Approve or Edit Social Post</title>
     <style>
         body {
@@ -80,20 +80,16 @@
         <input type="hidden" name="actionType" id="actionType">
 
         <label>Article Title:</label>
-        <div id="articleTitle">Lithuanian startup Traxlo raises €1.6 million...</div>
+        <div id="articleTitle">Loading...</div>
 
         <label>Article URL:</label>
-        <a href="https://www.eu-startups.com/2025/06/lithuanian-startup-traxlo-raises-e1-6-million-to-build-the-labor-infrastructure-for-the-ai-era/"
-            target="_blank">
-            View Article
-        </a>
+        <a id="articleLink" href="#" target="_blank">Loading link...</a>
 
         <label>Suggested Post (read-only):</label>
-        <textarea class="readonly" readonly
-            rows="5">Exciting times for innovation! Lithuanian startup Traxlo has secured €1.6 million in funding to advance labor infrastructure in the AI era...</textarea>
+        <textarea id="suggestedPost" class="readonly" readonly rows="5"></textarea>
 
         <label>Suggested Hashtags (read-only):</label>
-        <input type="text" class="readonly" readonly value="#Innovation #Startups #AI #FutureOfWork #Technology">
+        <input id="suggestedHashtags" class="readonly" readonly type="text">
 
         <label>User Changes to Post:</label>
         <textarea name="newPostContent" rows="5" placeholder="Enter your revised post here..."></textarea>
@@ -128,10 +124,31 @@
     </div>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        document.getElementById("articleId").value = urlParams.get("articleId") || "";
-        document.getElementById("platform").value = urlParams.get("platform") || "";
-        document.getElementById("email").value = urlParams.get("email") || "";
+        const params = new URLSearchParams(window.location.search);
+        const articleId = params.get("articleId");
+        const platform = params.get("platform");
+        const email = params.get("email");
+
+        document.getElementById("articleId").value = articleId || "";
+        document.getElementById("platform").value = platform || "";
+        document.getElementById("email").value = email || "";
+
+        async function loadArticleData() {
+            if (!articleId || !platform) return;
+
+            const res = await fetch(`https://pivotpointit.app.n8n.cloud/webhook/get-article?articleId=${articleId}&platform=${platform}`);
+            if (!res.ok) {
+                console.error("Failed to load article data");
+                return;
+            }
+
+            const data = await res.json();
+            document.getElementById("articleTitle").textContent = data.title || "—";
+            document.getElementById("articleLink").href = data.url || "#";
+            document.getElementById("articleLink").textContent = "View Article";
+            document.getElementById("suggestedPost").value = data.post || "";
+            document.getElementById("suggestedHashtags").value = data.hashtags || "";
+        }
 
         function setAction(type) {
             document.getElementById("actionType").value = type;
@@ -139,7 +156,6 @@
 
         document.getElementById("approvalForm").addEventListener("submit", async function (event) {
             event.preventDefault();
-
             const form = event.target;
             const data = new FormData(form);
             const jsonData = {};
@@ -155,6 +171,8 @@
 
             document.getElementById("messageBox").textContent = "✅ Your submission was successful!";
         });
+
+        loadArticleData();
     </script>
 </body>
 
