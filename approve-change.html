@@ -54,7 +54,7 @@
         }
 
         .buttons {
-            margin-top: 25px;
+            margin-top: 30px;
             display: flex;
             gap: 16px;
             flex-wrap: wrap;
@@ -91,11 +91,6 @@
 
         a {
             color: #0066cc;
-        }
-
-        small {
-            font-size: 13px;
-            color: #777;
         }
 
         @media screen and (max-width: 600px) {
@@ -140,6 +135,9 @@
             <label>Suggested Hashtags (read-only):</label>
             <input id="suggestedHashtags" class="readonly" readonly type="text">
 
+            <label>Suggested Schedule Date (read-only):</label>
+            <input id="scheduledDate" class="readonly" readonly type="text">
+
             <div class="buttons">
                 <button type="submit" onclick="setAction('approve')">✅ Approve Post</button>
             </div>
@@ -159,8 +157,7 @@
             </div>
 
             <label>Change Schedule Date:</label>
-            <input type="text" name="newScheduleDate" id="scheduledDate" placeholder="e.g. 2025-06-28 6:03am CDT">
-            <small>Format: YYYY-MM-DD HH:MMam/pm Timezone (e.g. <strong>2025-06-28 6:03am CDT</strong>)</small>
+            <input type="text" name="newScheduleDate" placeholder="e.g., 2025-06-28 6:03am CDT">
 
             <div class="buttons">
                 <button type="submit" onclick="setAction('changeScheduleDate')">📅 Update Schedule Date</button>
@@ -195,7 +192,6 @@
         document.getElementById("articleId").value = articleId || "";
         document.getElementById("platform").value = platform || "";
         document.getElementById("email").value = email || "";
-
         document.getElementById("formTitle").textContent = `Approve or Edit Social Post (${platform})`;
 
         async function loadArticleData() {
@@ -213,7 +209,7 @@
             document.getElementById("articleLink").textContent = "View Article";
             document.getElementById("suggestedPost").value = data.post || "";
             document.getElementById("suggestedHashtags").value = data.hashtags || "";
-            document.getElementById("scheduledDate").value = data.date || "";
+            document.getElementById("scheduledDate").value = data.scheduledDate || "";
         }
 
         function setAction(type) {
