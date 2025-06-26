@@ -135,8 +135,8 @@
             <label>Suggested Hashtags (read-only):</label>
             <input id="suggestedHashtags" class="readonly" readonly type="text">
 
-            <label>Suggested Schedule Date (read-only):</label>
-            <input id="scheduledDate" class="readonly" readonly type="text">
+            <label>Suggested Schedule Post Date (read-only):</label>
+            <input id="suggestedScheduleDate" class="readonly" readonly type="text">
 
             <div class="buttons">
                 <button type="submit" onclick="setAction('approve')">✅ Approve Post</button>
@@ -157,7 +157,7 @@
             </div>
 
             <label>Change Schedule Date:</label>
-            <input type="text" name="newScheduleDate" placeholder="e.g., 2025-06-28 6:03am CDT">
+            <input type="text" name="newScheudleDate" placeholder="e.g. 2025-06-28 6:03am CDT">
 
             <div class="buttons">
                 <button type="submit" onclick="setAction('changeScheduleDate')">📅 Update Schedule Date</button>
@@ -192,6 +192,7 @@
         document.getElementById("articleId").value = articleId || "";
         document.getElementById("platform").value = platform || "";
         document.getElementById("email").value = email || "";
+
         document.getElementById("formTitle").textContent = `Approve or Edit Social Post (${platform})`;
 
         async function loadArticleData() {
@@ -209,7 +210,7 @@
             document.getElementById("articleLink").textContent = "View Article";
             document.getElementById("suggestedPost").value = data.post || "";
             document.getElementById("suggestedHashtags").value = data.hashtags || "";
-            document.getElementById("scheduledDate").value = data.scheduledDate || "";
+            document.getElementById("suggestedScheduleDate").value = data.scheduleDate || "";
         }
 
         function setAction(type) {
