@@ -3,25 +3,36 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Approve or Edit Social Post</title>
     <style>
         body {
+            margin: 0;
+            padding: 30px 0;
+            background-color: #f4f4f4;
             font-family: Arial, sans-serif;
+        }
+
+        .container {
             max-width: 700px;
-            margin: 40px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
+            margin: auto;
+            background-color: #fff;
+            padding: 25px;
             border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
-            margin-bottom: 0;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
 
         label {
             font-weight: bold;
             display: block;
             margin-top: 20px;
+            font-size: 14px;
         }
 
         textarea,
@@ -30,19 +41,31 @@
             padding: 10px;
             margin-top: 5px;
             font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .readonly {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
         }
 
         .buttons {
             margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         button {
-            margin-right: 15px;
             padding: 10px 20px;
             font-size: 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
+            flex: 1 1 30%;
+            min-width: 140px;
         }
 
         .approve {
@@ -63,64 +86,77 @@
             color: green;
         }
 
-        .readonly {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
+        .guidelines {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        @media screen and (max-width: 480px) {
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1 id="formHeader">Review and Approve Post</h1>
+    <div class="container">
+        <h1 id="formTitle">Review and Approve Post</h1>
 
-    <form id="approvalForm">
-        <input type="hidden" name="articleId" id="articleId">
-        <input type="hidden" name="platform" id="platform">
-        <input type="hidden" name="email" id="email">
-        <input type="hidden" name="actionType" id="actionType">
+        <form id="approvalForm">
+            <input type="hidden" name="articleId" id="articleId">
+            <input type="hidden" name="platform" id="platform">
+            <input type="hidden" name="email" id="email">
+            <input type="hidden" name="actionType" id="actionType">
 
-        <label>Article Title:</label>
-        <div id="articleTitle">Loading...</div>
+            <label>Article Title:</label>
+            <div id="articleTitle">Loading...</div>
 
-        <label>Article URL:</label>
-        <a id="articleLink" href="#" target="_blank">Loading link...</a>
+            <label>Article URL:</label>
+            <a id="articleLink" href="#" target="_blank">Loading link...</a>
 
-        <label>Suggested Post (read-only):</label>
-        <textarea id="suggestedPost" class="readonly" readonly rows="5"></textarea>
+            <label>Suggested Post (read-only):</label>
+            <textarea id="suggestedPost" class="readonly" readonly rows="5"></textarea>
 
-        <label>Suggested Hashtags (read-only):</label>
-        <input id="suggestedHashtags" class="readonly" readonly type="text">
+            <label>Suggested Hashtags (read-only):</label>
+            <input id="suggestedHashtags" class="readonly" readonly type="text">
 
-        <label>User Changes to Post:</label>
-        <textarea name="newPostContent" id="newPostContent" rows="5"></textarea>
+            <label>User Changes to Post:</label>
+            <textarea name="newPostContent" rows="5" placeholder="Enter your revised post here..."></textarea>
 
-        <label>User Changes to Hashtags:</label>
-        <input type="text" name="newHashtagContent" id="newHashtagContent">
+            <label>User Changes to Hashtags:</label>
+            <input type="text" name="newHashtagContent" placeholder="Enter your new hashtags here...">
 
-        <div class="buttons">
-            <button type="submit" class="approve" onclick="setAction('approve')">✅ Approve Post</button>
-            <button type="submit" class="edit" onclick="setAction('changePost')">✏️ Change Post</button>
-            <button type="submit" class="hashtag" onclick="setAction('changeHashtag')">🔖 Change Hashtags</button>
+            <div class="buttons">
+                <button type="submit" class="approve" onclick="setAction('approve')">✅ Approve Post</button>
+                <button type="submit" class="edit" onclick="setAction('changePost')">✏️ Change Post</button>
+                <button type="submit" class="hashtag" onclick="setAction('changeHashtag')">🔖 Change Hashtags</button>
+            </div>
+        </form>
+
+        <div class="message" id="messageBox"></div>
+
+        <div class="guidelines">
+            <p>If you’d like to update the post or hashtags, please follow the guidelines below to ensure the best
+                results.</p>
+
+            <p>📝 <strong>Post Length Tips:</strong><br />
+                - <strong>LinkedIn:</strong> 100–300 words; clear, professional, well-formatted.<br />
+                - <strong>X:</strong> Under 280 characters; short, sharp, and engaging.<br />
+                - <strong>Facebook:</strong> 1–2 short paragraphs; keep it relatable.<br />
+                - <strong>Instagram:</strong> 1–3 sentences or up to 200 words; hook readers early.</p>
+
+            <p>🏷️ <strong>Hashtag Guidelines:</strong><br />
+                - <strong>LinkedIn:</strong> Use 2–5 professional tags at the end.<br />
+                - <strong>X:</strong> 1–3 short, trend-aware tags; keep it clean.<br />
+                - <strong>Facebook:</strong> 1–3 tags max; optional and subtle.<br />
+                - <strong>Instagram:</strong> 5–10 tags; blend niche + popular for reach.</p>
         </div>
-    </form>
-
-    <div class="message" id="messageBox"></div>
-
-    <div style="margin-top: 40px;">
-        <p>If you’d like to update the post or hashtags, please follow the guidelines below to ensure the best results.
-        </p>
-
-        <p>📝 <strong>Post Length Tips:</strong><br />
-            - <strong>LinkedIn:</strong> 100–300 words; clear, professional, well-formatted.<br />
-            - <strong>X:</strong> Under 280 characters; short, sharp, and engaging.<br />
-            - <strong>Facebook:</strong> 1–2 short paragraphs; keep it relatable.<br />
-            - <strong>Instagram:</strong> 1–3 sentences or up to 200 words; hook readers early.</p>
-
-        <p>🏷️ <strong>Hashtag Guidelines:</strong><br />
-            - <strong>LinkedIn:</strong> Use 2–5 professional tags at the end.<br />
-            - <strong>X:</strong> 1–3 short, trend-aware tags; keep it clean.<br />
-            - <strong>Facebook:</strong> 1–3 tags max; optional and subtle.<br />
-            - <strong>Instagram:</strong> 5–10 tags; blend niche + popular for reach.</p>
     </div>
 
     <script>
@@ -129,21 +165,12 @@
         const platform = params.get("platform");
         const email = params.get("email");
 
-        // Set hidden fields
         document.getElementById("articleId").value = articleId || "";
         document.getElementById("platform").value = platform || "";
         document.getElementById("email").value = email || "";
 
-        // Update page title and headers
-        if (platform) {
-            const titleText = `Approve or Edit Social Post (${platform})`;
-            document.title = titleText;
-            document.getElementById("formHeader").textContent = titleText;
-            document.getElementById("newPostContent").placeholder = `Enter your revised ${platform} post here...`;
-            document.getElementById("newHashtagContent").placeholder = `Enter new hashtags for ${platform}...`;
-        }
+        document.getElementById("formTitle").textContent = `Approve or Edit Social Post (${platform})`;
 
-        // Fetch article data from n8n endpoint
         async function loadArticleData() {
             if (!articleId || !platform) return;
 
@@ -180,7 +207,7 @@
                 body: JSON.stringify(jsonData)
             });
 
-            document.getElementById("messageBox").textContent = `✅ Your ${platform} submission was successful!`;
+            document.getElementById("messageBox").textContent = "✅ Your submission was successful!";
         });
 
         loadArticleData();
