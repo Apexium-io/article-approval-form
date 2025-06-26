@@ -71,7 +71,7 @@
 </head>
 
 <body>
-    <h1>Review and Approve Post</h1>
+    <h1 id="formHeader">Review and Approve Post</h1>
 
     <form id="approvalForm">
         <input type="hidden" name="articleId" id="articleId">
@@ -92,10 +92,10 @@
         <input id="suggestedHashtags" class="readonly" readonly type="text">
 
         <label>User Changes to Post:</label>
-        <textarea name="newPostContent" rows="5" placeholder="Enter your revised post here..."></textarea>
+        <textarea name="newPostContent" id="newPostContent" rows="5"></textarea>
 
         <label>User Changes to Hashtags:</label>
-        <input type="text" name="newHashtagContent" placeholder="Enter your new hashtags here...">
+        <input type="text" name="newHashtagContent" id="newHashtagContent">
 
         <div class="buttons">
             <button type="submit" class="approve" onclick="setAction('approve')">✅ Approve Post</button>
@@ -129,10 +129,21 @@
         const platform = params.get("platform");
         const email = params.get("email");
 
+        // Set hidden fields
         document.getElementById("articleId").value = articleId || "";
         document.getElementById("platform").value = platform || "";
         document.getElementById("email").value = email || "";
 
+        // Update page title and headers
+        if (platform) {
+            const titleText = `Approve or Edit Social Post (${platform})`;
+            document.title = titleText;
+            document.getElementById("formHeader").textContent = titleText;
+            document.getElementById("newPostContent").placeholder = `Enter your revised ${platform} post here...`;
+            document.getElementById("newHashtagContent").placeholder = `Enter new hashtags for ${platform}...`;
+        }
+
+        // Fetch article data from n8n endpoint
         async function loadArticleData() {
             if (!articleId || !platform) return;
 
@@ -169,7 +180,7 @@
                 body: JSON.stringify(jsonData)
             });
 
-            document.getElementById("messageBox").textContent = "✅ Your submission was successful!";
+            document.getElementById("messageBox").textContent = `✅ Your ${platform} submission was successful!`;
         });
 
         loadArticleData();
