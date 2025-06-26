@@ -12,15 +12,16 @@
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
             color: #222;
+            line-height: 1.6;
         }
 
         .container {
             max-width: 700px;
             margin: auto;
             background-color: #ffffff;
-            padding: 25px;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         h1 {
@@ -33,7 +34,7 @@
             font-weight: bold;
             display: block;
             margin-top: 20px;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         textarea,
@@ -41,7 +42,7 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            font-size: 14px;
+            font-size: 15px;
             border: 1px solid #ccc;
             border-radius: 6px;
             box-sizing: border-box;
@@ -55,20 +56,25 @@
         .buttons {
             margin-top: 30px;
             display: flex;
+            gap: 16px;
             flex-wrap: wrap;
-            gap: 12px;
         }
 
         button {
-            flex: 1 1 32%;
-            min-width: 140px;
-            padding: 10px 16px;
+            flex: 1 1 auto;
+            min-width: 180px;
+            padding: 12px 18px;
             font-size: 15px;
             border: 1px solid #bbb;
             border-radius: 8px;
-            cursor: pointer;
             background-color: #eaeaea;
             color: #333;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #dcdcdc;
         }
 
         .message {
@@ -81,10 +87,21 @@
             margin-top: 40px;
             font-size: 14px;
             color: #444;
-            line-height: 1.6;
         }
 
-        @media screen and (max-width: 480px) {
+        a {
+            color: #0066cc;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
             .buttons {
                 flex-direction: column;
             }
@@ -92,10 +109,6 @@
             button {
                 width: 100%;
             }
-        }
-
-        a {
-            color: #0066cc;
         }
     </style>
 </head>
@@ -111,7 +124,7 @@
             <input type="hidden" name="actionType" id="actionType">
 
             <label>Article Title:</label>
-            <div id="articleTitle">Loading...</div>
+            <div id="articleTitle" style="margin-bottom: 10px;">Loading...</div>
 
             <label>Article URL:</label>
             <a id="articleLink" href="#" target="_blank">Loading link...</a>
