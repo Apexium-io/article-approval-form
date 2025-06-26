@@ -8,24 +8,25 @@
     <style>
         body {
             margin: 0;
-            padding: 30px 0;
+            padding: 30px 15px;
             background-color: #f4f4f4;
             font-family: Arial, sans-serif;
+            color: #222;
         }
 
         .container {
             max-width: 700px;
             margin: auto;
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
         }
 
         h1 {
             margin-top: 0;
-            margin-bottom: 20px;
             font-size: 24px;
+            color: #111;
         }
 
         label {
@@ -55,29 +56,19 @@
             margin-top: 30px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
         button {
-            padding: 10px 20px;
-            font-size: 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            flex: 1 1 30%;
+            flex: 1 1 32%;
             min-width: 140px;
-        }
-
-        .approve {
-            background-color: #cfc;
-        }
-
-        .edit {
-            background-color: #eef;
-        }
-
-        .hashtag {
-            background-color: #ffe;
+            padding: 10px 16px;
+            font-size: 15px;
+            border: 1px solid #bbb;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #eaeaea;
+            color: #333;
         }
 
         .message {
@@ -89,7 +80,8 @@
         .guidelines {
             margin-top: 40px;
             font-size: 14px;
-            color: #555;
+            color: #444;
+            line-height: 1.6;
         }
 
         @media screen and (max-width: 480px) {
@@ -101,12 +93,16 @@
                 width: 100%;
             }
         }
+
+        a {
+            color: #0066cc;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1 id="formTitle">Review and Approve Post</h1>
+        <h1 id="formTitle">Approve or Edit Social Post</h1>
 
         <form id="approvalForm">
             <input type="hidden" name="articleId" id="articleId">
@@ -133,29 +129,28 @@
             <input type="text" name="newHashtagContent" placeholder="Enter your new hashtags here...">
 
             <div class="buttons">
-                <button type="submit" class="approve" onclick="setAction('approve')">✅ Approve Post</button>
-                <button type="submit" class="edit" onclick="setAction('changePost')">✏️ Change Post</button>
-                <button type="submit" class="hashtag" onclick="setAction('changeHashtag')">🔖 Change Hashtags</button>
+                <button type="submit" onclick="setAction('approve')">✅ Approve Post</button>
+                <button type="submit" onclick="setAction('changePost')">✏️ Change Post</button>
+                <button type="submit" onclick="setAction('changeHashtag')">🔖 Change Hashtags</button>
             </div>
         </form>
 
         <div class="message" id="messageBox"></div>
 
         <div class="guidelines">
-            <p>If you’d like to update the post or hashtags, please follow the guidelines below to ensure the best
-                results.</p>
+            <p>If you’d like to update the post or hashtags, please follow the guidelines below:</p>
 
             <p>📝 <strong>Post Length Tips:</strong><br />
-                - <strong>LinkedIn:</strong> 100–300 words; clear, professional, well-formatted.<br />
-                - <strong>X:</strong> Under 280 characters; short, sharp, and engaging.<br />
-                - <strong>Facebook:</strong> 1–2 short paragraphs; keep it relatable.<br />
-                - <strong>Instagram:</strong> 1–3 sentences or up to 200 words; hook readers early.</p>
+                • <strong>LinkedIn:</strong> 100–300 words; clear, professional, well-formatted.<br />
+                • <strong>X:</strong> Under 280 characters; short, sharp, and engaging.<br />
+                • <strong>Facebook:</strong> 1–2 short paragraphs; keep it relatable.<br />
+                • <strong>Instagram:</strong> 1–3 sentences or up to 200 words; hook readers early.</p>
 
             <p>🏷️ <strong>Hashtag Guidelines:</strong><br />
-                - <strong>LinkedIn:</strong> Use 2–5 professional tags at the end.<br />
-                - <strong>X:</strong> 1–3 short, trend-aware tags; keep it clean.<br />
-                - <strong>Facebook:</strong> 1–3 tags max; optional and subtle.<br />
-                - <strong>Instagram:</strong> 5–10 tags; blend niche + popular for reach.</p>
+                • <strong>LinkedIn:</strong> Use 2–5 professional tags at the end.<br />
+                • <strong>X:</strong> 1–3 short, trend-aware tags; keep it clean.<br />
+                • <strong>Facebook:</strong> 1–3 tags max; optional and subtle.<br />
+                • <strong>Instagram:</strong> 5–10 tags; blend niche + popular for reach.</p>
         </div>
     </div>
 
