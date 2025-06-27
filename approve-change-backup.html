@@ -110,11 +110,12 @@
 <body>
     <div class="container">
         <h1 id="formTitle">Approve or Edit Social Post</h1>
+
         <form id="approvalForm">
-            <input type="hidden" name="articleId" id="articleId" />
-            <input type="hidden" name="platform" id="platform" />
-            <input type="hidden" name="email" id="email" />
-            <input type="hidden" name="actionType" id="actionType" />
+            <input type="hidden" name="articleId" id="articleId">
+            <input type="hidden" name="platform" id="platform">
+            <input type="hidden" name="email" id="email">
+            <input type="hidden" name="actionType" id="actionType">
 
             <label>Article Title:</label>
             <div id="articleTitle">Loading...</div>
@@ -126,10 +127,10 @@
             <textarea id="suggestedPost" class="readonly" readonly rows="5"></textarea>
 
             <label>Suggested Hashtags (read-only):</label>
-            <input id="suggestedHashtags" class="readonly" readonly type="text" />
+            <input id="suggestedHashtags" class="readonly" readonly type="text">
 
             <label>Suggested Schedule Post Date (read-only):</label>
-            <input id="suggestedScheduleDate" class="readonly" readonly type="text" />
+            <input id="suggestedScheduleDate" class="readonly" readonly type="text">
 
             <div class="buttons">
                 <button type="submit" onclick="setAction('approve')">✅ Approve Post <span
@@ -167,7 +168,7 @@
             </div>
 
             <label>Hashtag Updates:</label>
-            <input type="text" name="newHashtagContent" placeholder="Enter your new hashtags here..." />
+            <input type="text" name="newHashtagContent" placeholder="Enter your new hashtags here...">
 
             <div class="buttons">
                 <button type="submit" onclick="setAction('changeHashtag')">🔖 Update Hashtags <span
@@ -177,7 +178,7 @@
             <div class="divider"></div>
 
             <label>Change Schedule Date:</label>
-            <input type="datetime-local" name="newScheduleDate" min="2025-01-01T00:00" required />
+            <input type="datetime-local" name="newScheduleDate" min="2025-01-01T00:00" required>
             <label>Timezone:</label>
             <select name="timezone">
                 <option value="CDT">CDT</option>
@@ -205,13 +206,8 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const articleId = params.get("articleId");
-        let platform = params.get("platform") || "";
-        let email = params.get("email") || "";
-
-        // Normalize platform and email
-        platform = platform.trim();
-        platform = platform.charAt(0).toUpperCase() + platform.slice(1).toLowerCase();
-        email = email.trim();
+        const platform = params.get("platform");
+        const email = params.get("email");
 
         document.getElementById("articleId").value = articleId || "";
         document.getElementById("platform").value = platform || "";
