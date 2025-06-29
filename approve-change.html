@@ -37,6 +37,15 @@
             font-size: 15px;
         }
 
+        .section-title {
+            font-weight: bold;
+            text-decoration: underline;
+            font-size: 16px;
+            margin-top: 30px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
         textarea,
         input[type="text"],
         input[type="datetime-local"],
@@ -95,12 +104,6 @@
             color: #444;
         }
 
-        .notification-icon {
-            float: right;
-            font-size: 18px;
-            color: #888;
-        }
-
         a {
             color: #0066cc;
         }
@@ -133,12 +136,17 @@
             <input id="suggestedScheduleDate" class="readonly" readonly type="text">
 
             <div class="buttons">
-                <button type="submit" onclick="setAction('approve')">✅ Approve Post <span
-                        class="notification-icon">🔔</span></button>
+                <button type="submit" onclick="setAction('approve')">Approve Post</button>
             </div>
 
             <div class="divider"></div>
 
+            <span class="section-title">Revised Post</span>
+            <label>Post Updates:</label>
+            <textarea name="newPostContent" rows="5" placeholder="Enter your revised post here..."></textarea>
+            <div class="buttons">
+                <button type="submit" onclick="setAction('changePost')">Update Post</button>
+            </div>
             <div class="guidelines">
                 <p><strong>📝 Post Length Tips:</strong><br />
                     • <strong>LinkedIn:</strong> 100–300 words; clear, professional, well-formatted.<br />
@@ -146,19 +154,6 @@
                     • <strong>Facebook:</strong> 1–2 short paragraphs; keep it relatable.<br />
                     • <strong>Instagram:</strong> 1–3 sentences or up to 200 words; hook readers early.
                 </p>
-            </div>
-
-            <label>Post Updates:</label>
-            <textarea name="newPostContent" rows="5" placeholder="Enter your revised post here..."></textarea>
-
-            <div class="buttons">
-                <button type="submit" onclick="setAction('changePost')">✏️ Update Post <span
-                        class="notification-icon">🔔</span></button>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="guidelines">
                 <p><strong>🏷️ Hashtag Guidelines:</strong><br />
                     • <strong>LinkedIn:</strong> Use 2–5 professional tags at the end.<br />
                     • <strong>X:</strong> 1–3 short, trend-aware tags; keep it clean.<br />
@@ -167,16 +162,18 @@
                 </p>
             </div>
 
+            <div class="divider"></div>
+
+            <span class="section-title">Revised Hashtags</span>
             <label>Hashtag Updates:</label>
             <input type="text" name="newHashtagContent" placeholder="Enter your new hashtags here...">
-
             <div class="buttons">
-                <button type="submit" onclick="setAction('changeHashtag')">🔖 Update Hashtags <span
-                        class="notification-icon">🔔</span></button>
+                <button type="submit" onclick="setAction('changeHashtag')">Update Hashtags</button>
             </div>
 
             <div class="divider"></div>
 
+            <span class="section-title">Revised Scheduled Date</span>
             <label>Change Schedule Date:</label>
             <input type="datetime-local" name="newScheduleDate" min="2025-01-01T00:00" required>
             <label>Timezone:</label>
@@ -186,10 +183,8 @@
                 <option value="PST">PST</option>
                 <option value="UTC">UTC</option>
             </select>
-
             <div class="buttons">
-                <button type="submit" onclick="setAction('changeScheduleDate')">📅 Update Schedule Date <span
-                        class="notification-icon">🔔</span></button>
+                <button type="submit" onclick="setAction('changeScheduleDate')">Update Schedule Date</button>
             </div>
 
             <div class="divider"></div>
@@ -206,12 +201,8 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const articleId = params.get("articleId") || "";
-
-        const platformRaw = params.get("platform") || "";
-        const platform = platformRaw.trim().charAt(0).toUpperCase() + platformRaw.trim().slice(1).toLowerCase();
-
-        const emailRaw = params.get("email") || "";
-        const email = emailRaw.trim().toLowerCase();
+        const platform = params.get("platform") || "";
+        const email = (params.get("email") || "").trim().toLowerCase();
 
         document.getElementById("articleId").value = articleId || "";
         document.getElementById("platform").value = platform || "";
@@ -244,7 +235,6 @@
             for (const [key, value] of data.entries()) {
                 jsonData[key] = value;
             }
-
             const response = await fetch("https://pivotpointit.app.n8n.cloud/webhook/form-handler", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
