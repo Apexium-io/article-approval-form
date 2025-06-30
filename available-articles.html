@@ -102,25 +102,30 @@
         <div class="nav-tabs">
             <a href="#" id="tab-home">Home</a>
             <a href="available-articles.html" id="tab-articles">Available Articles</a>
+            <a href="#" id="tab-3">Schedule Post Dates</a>
             <a href="#" id="tab-3">Activity Log</a>
             <a href="#" id="tab-4">Settings</a>
             <div class="notification-dropdown">
                 <span id="notificationBell">🔔</span>
-                <div class="dropdown-content" id="notificationBox">
-                    No new notifications.
-                </div>
+                <div class="dropdown-content" id="notificationBox">No new notifications.</div>
             </div>
         </div>
     </div>
-
     <div class="container">
         <h1>Available Articles</h1>
         <p>This is a placeholder for the Available Articles page.</p>
     </div>
-
     <script>
-        // If you want the Home tab to keep dynamic parameters, you can use:
-        // document.getElementById('tab-home').href = "approve-change.html" + window.location.search;
+        // Set Home tab to the original page if homeUrl param exists
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const homeUrl = params.get('homeUrl');
+            if (homeUrl) {
+                document.getElementById('tab-home').href = decodeURIComponent(homeUrl);
+            } else {
+                document.getElementById('tab-home').href = 'approve-change.html';
+            }
+        })();
 
         // Notification dropdown toggle
         document.getElementById('notificationBell').onclick = function () {
@@ -160,7 +165,6 @@
             } else if (path.includes('approve-change')) {
                 document.getElementById('tab-home').classList.add('active');
             }
-            // Extend for other tabs as needed
         })();
     </script>
 </body>
