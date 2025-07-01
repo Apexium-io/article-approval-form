@@ -94,13 +94,35 @@
             font-size: 24px;
             color: #111;
         }
+
+        .auth-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-buttons button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background-color: #0066cc;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #004999;
+        }
     </style>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
 </head>
 
 <body>
     <div class="header">
         <div class="nav-tabs">
-            <a href="#" id="tab-home">Home</a>
+            <a href="index.html" id="tab-home">Home</a>
             <a href="available-articles.html" id="tab-articles">Available Articles</a>
             <a href="schedule-post-dates.html" id="tab-schedule">Schedule Post Dates</a>
             <a href="activity-log.html" id="tab-activity">Activity Log</a>
@@ -114,8 +136,64 @@
     <div class="container">
         <h1>Activity Log</h1>
         <p>This is a placeholder for the Activity Log page.</p>
+        <div class="auth-buttons">
+            <button id="loginBtn">Login</button>
+            <button id="logoutBtn" style="display:none;">Logout</button>
+        </div>
     </div>
     <script>
+        let auth0 = null;
+
+        async function fetchAuth0Vars() {
+            const res = await fetch('/.netlify/functions/auth0-vars');
+            return res.json();
+        }
+
+        async function configureClient(domain, clientId) {
+            auth0 = await createAuth0Client({
+                domain: domain,
+                client_id: clientId,
+                cacheLocation: 'localstorage'
+            });
+        }
+
+        async function login() {
+            await auth0.loginWithRedirect({
+                redirect_uri: window.location.origin + window.location.pathname
+            });
+        }
+
+        async function logout() {
+            auth0.logout({
+                returnTo: window.location.origin + window.location.pathname
+            });
+        }
+
+        async function updateUI() {
+            const isAuthenticated = await auth0.isAuthenticated();
+            document.getElementById('loginBtn').style.display = isAuthenticated ? 'none' : 'inline-block';
+            document.getElementById('logoutBtn').style.display = isAuthenticated ? 'inline-block' : 'none';
+            if (isAuthenticated) {
+                document.body.style.display = '';
+            } else {
+                document.body.style.display = 'none';
+            }
+        }
+
+        async function requireAuth() {
+            const vars = await fetchAuth0Vars();
+            await configureClient(vars.domain, vars.clientId);
+            const isAuthenticated = await auth0.isAuthenticated();
+            if (!isAuthenticated) {
+                await login();
+            } else {
+                await updateUI();
+            }
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
         // Set Home tab to the original page if homeUrl param exists
         (function () {
             const params = new URLSearchParams(window.location.search);
@@ -123,7 +201,7 @@
             if (homeUrl) {
                 document.getElementById('tab-home').href = decodeURIComponent(homeUrl);
             } else {
-                document.getElementById('tab-home').href = 'approve-change.html';
+                document.getElementById('tab-home').href = 'index.html';
             }
         })();
 
@@ -168,10 +246,14 @@
                 document.getElementById('tab-schedule').classList.add('active');
             } else if (path.includes('available-articles')) {
                 document.getElementById('tab-articles').classList.add('active');
-            } else if (path.includes('approve-change')) {
+            } else if (path.includes('index') || path === "/" || path === "/index.html") {
                 document.getElementById('tab-home').classList.add('active');
             }
         })();
+
+        // Hide content until authentication is checked
+        document.body.style.display = 'none';
+        requireAuth();
     </script>
 </body>
 
