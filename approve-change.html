@@ -167,11 +167,6 @@
             border-top: 1px solid #ddd;
         }
 
-        .guidelines {
-            font-size: 14px;
-            color: #444;
-        }
-
         #inbox div {
             padding: 8px 0;
             border-bottom: 1px dashed #ccc;
@@ -180,17 +175,44 @@
         a {
             color: #0066cc;
         }
+
+        .auth-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .auth-buttons button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background-color: #0066cc;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .auth-buttons button:hover {
+            background-color: #004999;
+        }
     </style>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <script>
+        // Replace these with your Auth0 domain and client ID
+        window.AUTH0_DOMAIN = 'YOUR_DOMAIN.auth0.com';
+        window.AUTH0_CLIENT_ID = 'YOUR_CLIENT_ID';
+    </script>
 </head>
 
 <body>
     <div class="header">
         <div class="nav-tabs">
-            <a href="#" id="tab-home">Home</a>
+            <a href="index.html" id="tab-home">Home</a>
             <a href="available-articles.html" id="tab-articles">Available Articles</a>
-            <a href="#" id="tab-3">Schedule Post Dates</a>
-            <a href="#" id="tab-3">Activity Log</a>
-            <a href="#" id="tab-4">Settings</a>
+            <a href="schedule-post-dates.html" id="tab-schedule">Schedule Post Dates</a>
+            <a href="activity-log.html" id="tab-activity">Activity Log</a>
+            <a href="settings.html" id="tab-settings">Settings</a>
             <div class="notification-dropdown">
                 <span id="notificationBell">🔔</span>
                 <div class="dropdown-content" id="notificationBox">
@@ -279,12 +301,57 @@
         </form>
 
         <div id="inbox"></div>
+        <div class="auth-buttons">
+            <button id="loginBtn">Login</button>
+            <button id="logoutBtn" style="display:none;">Logout</button>
+        </div>
     </div>
-
     <script>
-        // Dynamically set the Home tab's link to the current page with all query params
-        const homeTab = document.getElementById('tab-home');
-        homeTab.href = window.location.pathname + window.location.search;
+        let auth0 = null;
+
+        async function configureClient() {
+            auth0 = await createAuth0Client({
+                domain: window.AUTH0_DOMAIN,
+                client_id: window.AUTH0_CLIENT_ID,
+                cacheLocation: 'localstorage'
+            });
+        }
+
+        async function login() {
+            await auth0.loginWithRedirect({
+                redirect_uri: window.location.origin + window.location.pathname + window.location.search
+            });
+        }
+
+        async function logout() {
+            auth0.logout({
+                returnTo: window.location.origin + window.location.pathname + window.location.search
+            });
+        }
+
+        async function updateUI() {
+            const isAuthenticated = await auth0.isAuthenticated();
+            document.getElementById('loginBtn').style.display = isAuthenticated ? 'none' : 'inline-block';
+            document.getElementById('logoutBtn').style.display = isAuthenticated ? 'inline-block' : 'none';
+            if (isAuthenticated) {
+                document.body.style.display = '';
+            } else {
+                document.body.style.display = 'none';
+            }
+        }
+
+        async function requireAuth() {
+            await configureClient();
+            const isAuthenticated = await auth0.isAuthenticated();
+            if (!isAuthenticated) {
+                await login();
+            } else {
+                await updateUI();
+            }
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
 
         // Notification dropdown toggle
         document.getElementById('notificationBell').onclick = function () {
@@ -319,12 +386,19 @@
         // Highlight active tab based on URL
         (function () {
             const path = window.location.pathname;
-            if (path.includes('available-articles')) {
+            if (path.includes('activity-log')) {
+                document.getElementById('tab-activity').classList.add('active');
+            } else if (path.includes('settings')) {
+                document.getElementById('tab-settings').classList.add('active');
+            } else if (path.includes('schedule-post-dates')) {
+                document.getElementById('tab-schedule').classList.add('active');
+            } else if (path.includes('available-articles')) {
                 document.getElementById('tab-articles').classList.add('active');
+            } else if (path.includes('index') || path === "/") {
+                document.getElementById('tab-home').classList.add('active');
             } else if (path.includes('approve-change')) {
                 document.getElementById('tab-home').classList.add('active');
             }
-            // Extend for other tabs as needed
         })();
 
         // Main form logic
@@ -407,6 +481,10 @@
         });
 
         loadArticleData();
+
+        // Hide content until authentication is checked
+        document.body.style.display = 'none';
+        requireAuth();
     </script>
 </body>
 
