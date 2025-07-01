@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apexium Article Approval Home</title>
+    <title>Home | Apexium Article Approval</title>
     <style>
         body {
             margin: 0;
@@ -154,10 +154,6 @@
         }
     </style>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
-    <script>
-        window.AUTH0_DOMAIN = 'YOUR_DOMAIN.auth0.com';    // <-- Replace with your Auth0 domain
-        window.AUTH0_CLIENT_ID = 'YOUR_CLIENT_ID';        // <-- Replace with your Auth0 client ID
-    </script>
 </head>
 
 <body>
@@ -194,10 +190,15 @@
     <script>
         let auth0 = null;
 
-        async function configureClient() {
+        async function fetchAuth0Vars() {
+            const res = await fetch('/.netlify/functions/auth0-vars');
+            return res.json();
+        }
+
+        async function configureClient(domain, clientId) {
             auth0 = await createAuth0Client({
-                domain: window.AUTH0_DOMAIN,
-                client_id: window.AUTH0_CLIENT_ID,
+                domain: domain,
+                client_id: clientId,
                 cacheLocation: 'localstorage'
             });
         }
@@ -226,7 +227,8 @@
         }
 
         async function requireAuth() {
-            await configureClient();
+            const vars = await fetchAuth0Vars();
+            await configureClient(vars.domain, vars.clientId);
             const isAuthenticated = await auth0.isAuthenticated();
             if (!isAuthenticated) {
                 await login();
@@ -268,8 +270,21 @@
         }
         renderNotifications();
 
-        // Highlight active tab
-        document.getElementById('tab-home').classList.add('active');
+        // Highlight active tab based on URL
+        (function () {
+            const path = window.location.pathname;
+            if (path.includes('settings')) {
+                document.getElementById('tab-settings').classList.add('active');
+            } else if (path.includes('activity-log')) {
+                document.getElementById('tab-activity').classList.add('active');
+            } else if (path.includes('schedule-post-dates')) {
+                document.getElementById('tab-schedule').classList.add('active');
+            } else if (path.includes('available-articles')) {
+                document.getElementById('tab-articles').classList.add('active');
+            } else if (path.includes('index') || path === "/" || path === "/index.html") {
+                document.getElementById('tab-home').classList.add('active');
+            }
+        })();
 
         // Hide content until authentication is checked
         document.body.style.display = 'none';
